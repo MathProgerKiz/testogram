@@ -1,0 +1,58 @@
+# Общие файлы
+.DS_Store
+Thumbs.db
+
+# Папки и файлы для PyCharm
+.idea/
+*.iml
+
+# Папки и файлы для Django
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+db.sqlite3
+*.log
+media/
+staticfiles/
+
+# Папки и файлы для виртуального окружения
+venv/
+env/
+.env
+.venv/
+
+# Папки и файлы для тестовых данных
+*.coverage
+*.cover
+nosetests.xml
+coverage.xml
+*.hypothesis/
+
+# Папки и файлы для сборки и кэш
+build/
+dist/
+*.egg-info/
+
+# Файлы конфигурации
+*.env
+*.local
+*.secret
+
+# Файлы кэширования
+*.sqlite3
+*.db
+
+# Папки для сторонних зависимостей
+node_modules/
+
+# Docker
+docker-compose.override.yml
+*.env
+
+# Прочее
+*.swp
+*.swo
+*.tmp
+*.bak
+*.old
