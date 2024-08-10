@@ -1,9 +1,10 @@
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin
-from general.api.serializers import UserRegistrationSerializer, UserListSerializer, UserRetrieveSerializer
-from general.models import User
+from general.api.serializers import UserRegistrationSerializer, UserListSerializer, UserRetrieveSerializer, \
+    PostListSerializer, PostRetrieveSerializer, PostCreateUpdateSerializer
+from general.models import User, Post
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 
@@ -11,9 +12,7 @@ class UserViewSet(
     CreateModelMixin,
     ListModelMixin,
     RetrieveModelMixin,
-    GenericViewSet, ):
-    serializer_class = UserRegistrationSerializer
-    queryset = User.objects.all().order_by("-id")
+    GenericViewSet):
 
     def get_serializer_class(self):
         if self.action == "create":
@@ -49,8 +48,32 @@ class UserViewSet(
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+    @action(detail=True, methods=["post"])
+    def add_friend(self, request, pk=None):
+        user = self.get_object()
+        request.user.friends.add(user)
+        return Response("Friend added")
+
+    @action(detail=True, methods=["post"])
+    def remove_friend(self, request, pk=None):
+        user = self.get_object()
+        request.user.friends.remove(user)
+        return Response("Friend removed")
+
     def get_queryset(self):
         queryset = User.objects.all().prefetch_related(
             "friends",
         ).order_by("-id")
         return queryset
+
+
+class PostViewSet(ModelViewSet):
+    queryset = Post.objects.all().order_by("-id")
+    permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return PostListSerializer
+        elif self.action == "retrieve":
+            return PostRetrieveSerializer
+        return PostCreateUpdateSerializer
