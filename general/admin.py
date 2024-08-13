@@ -11,7 +11,7 @@ from general.models import (
     Post,
     User,
     Comment,
-    Reaction,
+    Reaction, Chat,
 )
 
 
@@ -150,7 +150,7 @@ class ReactionModelAdmin(admin.ModelAdmin):
         "post",
         "value",
     )
-    # autocomplete_fields = (
-    #     "author",
-    #     "post",
-    # )
+
+
+
+admin.site.register(Chat)
