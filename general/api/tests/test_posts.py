@@ -4,7 +4,6 @@ from general.factories import UserFactory
 from general.models import Post
 
 
-
 class PostTestCase(APITestCase):
     def setUp(self):
         self.user = UserFactory()
@@ -29,3 +28,18 @@ class PostTestCase(APITestCase):
         self.assertEqual(post.title, data["title"])
         self.assertEqual(post.body, data["body"])
         self.assertIsNotNone(post.created_at)
+
+    def test_unauthorized_post_request(self):
+        self.client.logout()
+
+        data = {
+            "title": "some post title",
+            "body": "some text",
+        }
+        response = self.client.post(
+            path=self.url,
+            data=data,
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(Post.objects.all().count(), 0)
